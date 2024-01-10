@@ -1,0 +1,262 @@
+package digital.softwareshinobi.napkinexchange.security.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import digital.softwareshinobi.napkinexchange.market.utils.GetRandomNumber;
+import digital.softwareshinobi.napkinexchange.security.quote.SecurityPricingQuote;
+import digital.softwareshinobi.napkinexchange.ticker.defaults.DefaultStockPrices;
+import digital.softwareshinobi.napkinexchange.ticker.enums.InvestorRating;
+import digital.softwareshinobi.napkinexchange.ticker.enums.MarketCap;
+import digital.softwareshinobi.napkinexchange.ticker.enums.Volatility;
+import jakarta.persistence.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+@Entity(name = "stock")
+@Table(name = "stock")
+@Getter
+@Setter
+@Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor
+public class Security {
+
+    @Id
+    private String ticker;
+
+    @Column(name = "name")
+    private String companyName;
+
+    @Column(name = "sector")
+    private String sector;
+
+    @Column(name = "cap")
+    @Enumerated(EnumType.STRING)
+    private MarketCap marketCap;
+
+    @Column(name = "price")
+    private Double price;
+
+    @Column(name = "last_quote")
+    private Double lastQuote;
+
+    @Column(name = "priceChangeAmount")
+    private long priceChangeAmount = 0l;
+
+    @Column(name = "priceChangePercentage")
+    private Double priceChangePercentage = 0d;
+
+    @Column(name = "momentum")
+    private Integer momentum;
+
+    @Column(name = "momentum_streak")
+    private Integer momentumStreakInDays;
+
+    @Column(name = "volatile")
+    @Enumerated(EnumType.STRING)
+    private Volatility volatileStock;
+
+    @Column(name = "investor_rating")
+    @Enumerated(EnumType.STRING)
+    private InvestorRating investorRating;
+
+    @OneToMany(mappedBy = "stock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<SecurityPricingQuote> priceHistory;
+
+    public Security(String ticker,
+            String companyName,
+            String sector,
+            MarketCap marketCap,
+            Volatility volatileStock,
+            InvestorRating investorRating) {
+
+        this.ticker = ticker;
+
+        this.companyName = companyName;
+
+        this.sector = sector;
+
+        this.marketCap = marketCap;
+
+        this.volatileStock = volatileStock;
+
+        this.investorRating = investorRating;
+
+        this.price = DefaultStockPrices.getDefaultPriceWithCap(marketCap);
+
+        this.lastQuote = DefaultStockPrices.getDefaultPriceWithCap(marketCap);
+
+        this.momentum = 0;
+
+        this.momentumStreakInDays = 0;
+
+        this.priceChangeAmount = 0l;
+
+        this.priceChangePercentage = 0d;
+
+    }
+
+//    public void updatePriceWithFormulaHack() {
+//
+//        //Volatile stocks change twice to increase market movements
+//        double randomNumber = GetRandomNumber.getRandomNumberForStocks(this.marketCap);
+//
+//        double randomPositiveNumber = GetRandomNumber.getRandomPositiveNumberForStocks(this.marketCap);
+//
+//        double stockPrice = this.getPrice();
+//
+//        double newPrice = Math.round((stockPrice
+//                + (stockPrice * randomNumber)
+//                + (stockPrice * (randomNumber * this.getVolatileStock().ordinal()))
+//                + (this.getInvestorRating().investorRatingMultiplier() * randomPositiveNumber)
+//                + (this.getMomentum() * randomPositiveNumber)) * 100.00) / 100.00;
+//
+//        setPrice(newPrice + 4.0);
+//
+//    }
+    String uuid;
+    public void updatePriceWithFormula() {
+
+        //Volatile stocks change twice to increase market movements
+        double randomNumber = GetRandomNumber.getRandomNumberForStocks(this.marketCap);
+
+        double randomPositiveNumber = GetRandomNumber.getRandomPositiveNumberForStocks(this.marketCap);
+
+        double stockPrice = this.getPrice();
+
+        double newPrice = Math.round((stockPrice
+                + (stockPrice * randomNumber)
+                + (stockPrice * (randomNumber * this.getVolatileStock().ordinal()))
+                + (this.getInvestorRating().investorRatingMultiplier() * randomPositiveNumber)
+                + (this.getMomentum() * randomPositiveNumber)) * 100.00) / 100.00;
+
+        this.priceChangeAmount = new Date().getTime();
+        this.uuid = UUID.randomUUID().toString();
+        setPrice(newPrice);
+
+    }
+
+    public void updateMomentum() {
+
+        int momentumStreak = getMomentumStreakInDays();
+
+        if (momentumStreak >= 3) {
+
+            setMomentum(1);
+
+            return;
+
+        }
+        if (momentumStreak <= -3) {
+
+            setMomentum(-1);
+
+            return;
+
+        }
+
+        setMomentum(0);
+
+    }
+
+    public void updateMomentumStreak() {
+
+        if (getMomentumStreakInDays() == null) {
+
+            setMomentumStreakInDays(0);
+
+            return;
+
+        }
+
+        double price = getPrice();
+
+        int momentumStreakDays = getMomentumStreakInDays();
+
+        if (price > getLastQuote()) {
+
+            if (momentumStreakDays <= -1) {
+
+                setMomentumStreakInDays(0);
+
+                return;
+
+            }
+
+            setMomentumStreakInDays(momentumStreakDays + 1);
+
+            return;
+
+        }
+
+        if (price < getLastQuote()) {
+
+            if (getMomentum() >= 1) {
+
+                setMomentumStreakInDays(0);
+
+                return;
+
+            }
+
+            setMomentumStreakInDays(momentumStreakDays - 1);
+
+        }
+
+    }
+
+    //these two methods are called only on news and earnings report announcements
+    public void increaseInvestorRating() {
+        switch (this.getInvestorRating()) {
+            case Sell ->
+                this.setInvestorRating(InvestorRating.Hold);
+            case Hold ->
+                this.setInvestorRating(InvestorRating.Neutral);
+            case Neutral ->
+                this.setInvestorRating(InvestorRating.Buy);
+            case Buy ->
+                this.setInvestorRating(InvestorRating.StrongBuy);
+            case StrongBuy -> {
+            }
+        }
+    }
+
+    public void decreaseInvestorRating() {
+        switch (this.getInvestorRating()) {
+            case Sell -> {
+            }
+            case Hold ->
+                this.setInvestorRating(InvestorRating.Sell);
+            case Neutral ->
+                this.setInvestorRating(InvestorRating.Hold);
+            case Buy ->
+                this.setInvestorRating(InvestorRating.Neutral);
+            case StrongBuy ->
+                this.setInvestorRating(InvestorRating.Buy);
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Stock{");
+        sb.append("ticker=").append(ticker);
+        sb.append(", companyName=").append(companyName);
+        sb.append(", sector=").append(sector);
+        sb.append(", marketCap=").append(marketCap);
+        sb.append(", price=").append(price);
+        sb.append(", lastQuote=").append(lastQuote);
+        sb.append(", priceChangeAmount=").append(priceChangeAmount);
+        sb.append(", priceChangePercentage=").append(priceChangePercentage);
+        sb.append(", momentum=").append(momentum);
+        sb.append(", momentumStreakInDays=").append(momentumStreakInDays);
+        sb.append(", volatileStock=").append(volatileStock);
+        sb.append(", investorRating=").append(investorRating);
+        sb.append('}');
+        return sb.toString();
+    }
+
+}

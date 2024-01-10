@@ -1,13 +1,13 @@
 package digital.softwareshinobi.napkinexchange.trader.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import digital.softwareshinobi.napkinexchange.ticker.entity.Stock;
+import digital.softwareshinobi.napkinexchange.security.model.Security;
 import digital.softwareshinobi.napkinexchange.trader.exception.AccountBalanceException;
 import jakarta.persistence.*;
 import java.io.Serializable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table
@@ -25,7 +25,7 @@ public class LimitOrder implements Serializable {
     private Account account;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Stock stock;
+    private Security stock;
 
     @Column
     private Integer sharesToBuy;
@@ -36,7 +36,7 @@ public class LimitOrder implements Serializable {
     @Column
     private String limitOrderType;
 
-    public LimitOrder(String limitOrderType, Account account, Stock stock, int sharesToBuy, double limitPrice) {
+    public LimitOrder(String limitOrderType, Account account, Security stock, int sharesToBuy, double limitPrice) {
 
         this.limitOrderType = limitOrderType;
 

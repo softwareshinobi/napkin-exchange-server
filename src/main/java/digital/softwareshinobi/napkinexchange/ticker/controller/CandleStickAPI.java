@@ -2,11 +2,9 @@ package digital.softwareshinobi.napkinexchange.ticker.controller;
 
 import lombok.AllArgsConstructor;
 import digital.softwareshinobi.napkinexchange.ticker.dto.StockSummaryDTO;
-import digital.softwareshinobi.napkinexchange.ticker.enums.MarketCap;
 import digital.softwareshinobi.napkinexchange.ticker.exception.StockNotFoundException;
-import digital.softwareshinobi.napkinexchange.ticker.entity.Stock;
 import digital.softwareshinobi.napkinexchange.ticker.dto.StockDTO;
-import digital.softwareshinobi.napkinexchange.ticker.dto.StockPriceHistoryDTO;
+import digital.softwareshinobi.napkinexchange.security.quote.SecurityPricingQuoteWrapper;
 import digital.softwareshinobi.napkinexchange.ticker.service.StockPriceHistoryService;
 import digital.softwareshinobi.napkinexchange.ticker.service.StockService;
 import java.util.ArrayList;
@@ -39,17 +37,17 @@ public class CandleStickAPI {
     }
 
     @GetMapping(value = "/history/{ticker}")
-    public List<StockPriceHistoryDTO> getIndividualStockDatahistorty(@PathVariable String ticker) {
+    public List<SecurityPricingQuoteWrapper> getIndividualStockDatahistorty(@PathVariable String ticker) {
 
         StockDTO dto = new StockDTO(stockService.getStockByTickerSymbol(ticker));
 
-        List<StockPriceHistoryDTO> trimmedCandleStickList = new ArrayList();
+        List<SecurityPricingQuoteWrapper> trimmedCandleStickList = new ArrayList();
 
-        List<StockPriceHistoryDTO> stockPriceHistoryList = dto.getPriceHistory();
+        List<SecurityPricingQuoteWrapper> stockPriceHistoryList = dto.getPricingHistory();
 
         Collections.reverse(stockPriceHistoryList); // numbers now contains [5, 4, 3, 2, 1]
 
-        for (StockPriceHistoryDTO stockPriceHistory : stockPriceHistoryList) {
+        for (SecurityPricingQuoteWrapper stockPriceHistory : stockPriceHistoryList) {
 
             if (trimmedCandleStickList.size() < TARGET_OUTPUT_LIST_SIZE) {
 

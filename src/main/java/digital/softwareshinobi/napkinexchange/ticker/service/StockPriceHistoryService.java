@@ -3,7 +3,7 @@ package digital.softwareshinobi.napkinexchange.ticker.service;
 import lombok.AllArgsConstructor;
 import digital.softwareshinobi.napkinexchange.market.entity.Market;
 import digital.softwareshinobi.napkinexchange.market.service.MarketService;
-import digital.softwareshinobi.napkinexchange.ticker.entity.StockPriceHistory;
+import digital.softwareshinobi.napkinexchange.security.quote.SecurityPricingQuote;
 import digital.softwareshinobi.napkinexchange.ticker.entity.idclass.StockPriceHistoryId;
 import digital.softwareshinobi.napkinexchange.ticker.repository.StockPriceHistoryRepository;
 import digital.softwareshinobi.napkinexchange.ticker.utils.SortHistory;
@@ -31,14 +31,14 @@ public class StockPriceHistoryService {
 
         stockService.getAllStocks().forEach(stock
                 -> stockPriceHistoryRepository.save(
-                        new StockPriceHistory(
+                        new SecurityPricingQuote(
                                 new StockPriceHistoryId(market.getDate(), stock.getTicker()),
                                 stock,
                                 stock.getPrice())));
     }
 
-    public List<StockPriceHistory> findStockHistoryByTicker(String ticker) {
-        List<StockPriceHistory> stockPriceHistory = stockPriceHistoryRepository.findAll().stream()
+    public List<SecurityPricingQuote> findStockHistoryByTicker(String ticker) {
+        List<SecurityPricingQuote> stockPriceHistory = stockPriceHistoryRepository.findAll().stream()
                 .filter(history -> history.getStock().getTicker().equalsIgnoreCase(ticker))
                 .collect(Collectors.toList());
         SortHistory.sortStockHistoryByDate(stockPriceHistory);

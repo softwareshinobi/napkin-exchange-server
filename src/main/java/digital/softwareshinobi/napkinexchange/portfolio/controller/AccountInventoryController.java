@@ -1,5 +1,6 @@
 package digital.softwareshinobi.napkinexchange.portfolio.controller;
 
+import digital.softwareshinobi.napkinexchange.security.model.Security;
 import digital.softwareshinobi.napkinexchange.ticker.service.StockService;
 import digital.softwareshinobi.napkinexchange.trader.exception.AccountBalanceException;
 import digital.softwareshinobi.napkinexchange.trader.exception.AccountNotFoundException;
@@ -8,10 +9,9 @@ import digital.softwareshinobi.napkinexchange.trader.model.payload.BuyStockReque
 import digital.softwareshinobi.napkinexchange.trader.model.payload.LimitOrderRequest;
 import digital.softwareshinobi.napkinexchange.trader.model.payload.SellStockRequest;
 import digital.softwareshinobi.napkinexchange.trader.service.AccountService;
-import digital.softwareshinobi.napkinexchange.ticker.entity.Stock;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/inventory")
@@ -92,7 +92,7 @@ public class AccountInventoryController {
 
         System.out.println("buyStockRequest / fulfilled");
 
-        Stock stock = stockService.getStockByTickerSymbol(buyStockRequest.getTicker());
+        Security stock = stockService.getStockByTickerSymbol(buyStockRequest.getTicker());
 
         System.out.println("stock: " + stock);
 

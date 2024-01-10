@@ -1,9 +1,9 @@
 package digital.softwareshinobi.napkinexchange.ticker.dto;
 
+import digital.softwareshinobi.napkinexchange.security.model.Security;
+import digital.softwareshinobi.napkinexchange.security.quote.SecurityPricingQuoteWrapper;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import digital.softwareshinobi.napkinexchange.ticker.entity.Stock;
 import digital.softwareshinobi.napkinexchange.trader.utils.CalculateCostBasisAndProfits;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,35 +15,51 @@ import lombok.Setter;
 public class StockDTO {
 
     private String ticker;
+    
     private String companyName;
+    
     private String sector;
+    
     private String marketCap;
+    
     private double price;
+    
     private double lastDayPrice;
-    private double percentChange;
+    
     private int momentum;
+    
     private int momentumStreakInDays;
+    
     private String volatileStock;
+    
     private String investorRating;
 
-    private List<StockPriceHistoryDTO> priceHistory;
+    private List<SecurityPricingQuoteWrapper> pricingHistory;
 
-    public StockDTO(Stock stock) {
+    private double priceChangePercentage;
+    
+    private double priceChangeDifferential;
+
+    public StockDTO(Security stock) {
+        
         this.ticker = stock.getTicker();
         this.companyName = stock.getCompanyName();
         this.sector = stock.getSector();
         this.marketCap = String.valueOf(stock.getMarketCap());
         this.price = stock.getPrice();
-        this.lastDayPrice = stock.getLastDayPrice();
+        this.lastDayPrice = stock.getLastQuote();
         this.momentum = stock.getMomentum();
         this.momentumStreakInDays = stock.getMomentumStreakInDays();
         this.volatileStock = String.valueOf(stock.getVolatileStock());
         this.investorRating = String.valueOf(stock.getInvestorRating());
-  this.priceHistory = stock.getPriceHistory().stream()
-                .map(StockPriceHistoryDTO::new)
+        
+        this.pricingHistory = stock.getPriceHistory().stream()
+                .map(SecurityPricingQuoteWrapper::new)
                 .collect(Collectors.toList());
 
-        this.percentChange = getPercentChange(this.getPrice(), this.getLastDayPrice());
+        this.priceChangePercentage = getPercentChange(this.getPrice(), this.getLastDayPrice());
+      
+        this.priceChangeDifferential = (this.getLastDayPrice() - this.getPrice());
 
     }
 
@@ -95,14 +111,12 @@ public class StockDTO {
         this.lastDayPrice = lastDayPrice;
     }
 
-    public double getPercentChange() {
-        return percentChange;
-    }
-
-    public void setPercentChange(double percentChange) {
-        this.percentChange = percentChange;
-    }
-
+//    public double getPercentChange() {
+//        return priceChangePercentage;
+//    }
+//    public void setPercentChange(double percentChange) {
+//        this.priceChangePercentage = percentChange;
+//    }
     public int getMomentum() {
         return momentum;
     }
@@ -135,18 +149,18 @@ public class StockDTO {
         this.investorRating = investorRating;
     }
 
-    public List<StockPriceHistoryDTO> getPriceHistory() {
-        return priceHistory;
-    }
-
-    public void setPriceHistory(List<StockPriceHistoryDTO> priceHistory) {
-        this.priceHistory = priceHistory;
-    }
-
     public double getPercentChange(double currentPrice, double lastDayPrice) {
 
         return CalculateCostBasisAndProfits.roundToTwoDecimalPlaces(
                 (currentPrice - lastDayPrice) / lastDayPrice * 100);
 
+    }
+
+    public List<SecurityPricingQuoteWrapper> getPricingHistory() {
+        return pricingHistory;
+    }
+
+    public void setPricingHistory(List<SecurityPricingQuoteWrapper> pricingHistory) {
+        this.pricingHistory = pricingHistory;
     }
 }

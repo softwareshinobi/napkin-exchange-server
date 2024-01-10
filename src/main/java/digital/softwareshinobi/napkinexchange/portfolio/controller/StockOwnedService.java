@@ -1,7 +1,6 @@
 package digital.softwareshinobi.napkinexchange.portfolio.controller;
 
-import lombok.AllArgsConstructor;
-import digital.softwareshinobi.napkinexchange.ticker.entity.Stock;
+import digital.softwareshinobi.napkinexchange.security.model.Security;
 import digital.softwareshinobi.napkinexchange.ticker.service.StockService;
 import digital.softwareshinobi.napkinexchange.trader.exception.AccountBalanceException;
 import digital.softwareshinobi.napkinexchange.trader.model.entity.Account;
@@ -11,6 +10,7 @@ import digital.softwareshinobi.napkinexchange.trader.model.payload.SellStockRequ
 import digital.softwareshinobi.napkinexchange.trader.repository.StockOwnedRepository;
 import digital.softwareshinobi.napkinexchange.trader.service.AccountService;
 import digital.softwareshinobi.napkinexchange.trader.utils.ValidateStockTransaction;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,7 @@ public class StockOwnedService {
 
         Account account = accountService.getAccountByName(buyStockRequest.getUsername());
 
-        Stock stock = stockService.getStockByTickerSymbol(buyStockRequest.getTicker());
+        Security stock = stockService.getStockByTickerSymbol(buyStockRequest.getTicker());
 
         StockOwned stockOwned = findStockOwned(account, stock);
 
@@ -90,8 +90,8 @@ public class StockOwnedService {
         }
 
         System.out.println("2.0");
-     
-        Stock stock = stockService.getStockByTickerSymbol(sellStock.getTicker());
+
+        Security stock = stockService.getStockByTickerSymbol(sellStock.getTicker());
 
         System.out.println("2");
 
@@ -128,7 +128,7 @@ public class StockOwnedService {
 
     }
 
-    public StockOwned findStockOwned(Account account, Stock stock) {
+    public StockOwned findStockOwned(Account account, Security stock) {
 
         return stockOwnedRepository.findAll().stream()
                 .filter(stockOwned -> stockOwned.getTicker().equalsIgnoreCase(stock.getTicker()))

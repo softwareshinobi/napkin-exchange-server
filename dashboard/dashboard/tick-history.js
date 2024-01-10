@@ -1,37 +1,50 @@
 
 $(document).ready(function () {
 
-	setInterval(displayAllActivityRecords,1000);
+    displayPricingTickData();
+
+	setInterval(displayPricingTickData, 8 * 1000);
 
 });
 
-function displayAllActivityRecords() {
+function displayPricingTickData() {
 
-	console.debug(" -> :: displayAllActivityRecords()");	
+	console.debug(" -> :: displayPricingTickData()");	
 
 	$.ajax({
 
 		type: "GET",
 		
-//		url: "https://api2.napkinexchange.softwareshinobi.digital/candlestick/detailed/DIONE",
-
-		url: "http://localhost:8888/candlestick/DIONE",
+		url: traderExchangeURL + "/candlestick/CALLISTO",
 
 		contentType: "text/plain",
 		
 		crossDomain: true,				
 
-		success: function (data, status, jqXHR) {
+		success: function (responseData, status, jqXHR) {
 
-            console.log("everything went good.");
-                        
-			console.log("data");
+	        console.log("responseData / ", responseData);
 
-            console.log(data);
-            
-            setResultsArea(data);
-            
-            showResultsArea();
+            var trHTML = '';
+
+            for (var i = responseData.pricingHistory.length - 1; i >= 0; i--) {
+	        
+                trHTML += '<tr>';
+
+                trHTML += '<td class="">' + responseData.pricingHistory[i].id + '</td>';
+
+                trHTML += '<td class="">' + responseData.pricingHistory[i].ticker + '</td>';
+
+                trHTML += '<td class="">' + responseData.pricingHistory[i].bid + '</td>';	
+
+                trHTML += '<td class="">' + responseData.pricingHistory[i].ask + '</td>';
+
+                trHTML += '<td class="">' + responseData.pricingHistory[i].priceChangeAmount + '</td>';
+      trHTML += '<td class="">' + responseData.pricingHistory[i].priceChangePercentage + '</td>';
+
+            }
+
+            $('#activity-display-table  > tbody').html(trHTML); 
 
 		},
 
@@ -50,96 +63,5 @@ function displayAllActivityRecords() {
 		}
 
 	});
-
-	//
-
-	//console.debug(" <- :: processForm()");
-  
-}
-
-
-function setResultsArea(responseData) {
-
-	
-	console.log("reverse: ")
-	console.log( responseData);
-	
-	
-	 //var tableHTML = '';
-	 
-	
-   // console.log("|");
-	        var trHTML = '';
-
-  //  for (var i = 0; i < responseData.priceHistory.length; i++) {
-
-for (var i = responseData.priceHistory.length - 1; i >= 0; i--) {
-
-//for (var i = arr.length - 1; i >= 0; i--) {
-//    console.log(arr[i]);
-//}
-
-
-	console.log("beeeeeeepppppppppppppppppp");
-	
-		trHTML += '<tr>';
-	
-         trHTML += '<td class="METADATA DEBUG">' + responseData.priceHistory[i].marketDate + '</td>';
-		 trHTML += '<td class="METADATA DEBUG">' + responseData.priceHistory[i].stockPrice + '</td>';
-
-
-		trHTML += '</tr>';
-		
-		
-		  
-}
-	 $('#activity-display-table  > tbody').html(trHTML); 
-		 
-		// setTimeout(4444);    
-		// fullRow += trHTML;
-		
-		    console.log("trHTML", trHTML);
-
-}
-
-function clearFormBoxes(){
-
-    setcategory("");
-
-    setRemoteServerIP("");
-
-    setRemoteServerPort(""); 
-
-   // hideResultsArea();
-    
-}
-
-function setcategory(newValue) {
-
-	$("#category").val(newValue);
-
-}
-
-function setRemoteServerIP(newValue) {
-
-	$("#state").val(newValue);
-
-}
-
-function setRemoteServerPort(newValue) {
-
-	$("#description").val(newValue);
-
-}
-
-function showResultsArea() {
-
-	$("#results-area-parent-div").show();
-
-}
-
-function hideResultsArea() {
-
-	$("#results-area-parent-div").hide();
 
 }
