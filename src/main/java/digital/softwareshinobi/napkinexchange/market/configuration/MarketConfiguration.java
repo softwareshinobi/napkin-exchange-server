@@ -1,13 +1,13 @@
 package digital.softwareshinobi.napkinexchange.market.configuration;
 
-import lombok.AllArgsConstructor;
-import digital.softwareshinobi.napkinexchange.market.entity.Market;
+import digital.softwareshinobi.napkinexchange.market.Market;
 import digital.softwareshinobi.napkinexchange.market.service.MarketService;
+import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import jakarta.annotation.PostConstruct;
 
 @Configuration
 @AllArgsConstructor

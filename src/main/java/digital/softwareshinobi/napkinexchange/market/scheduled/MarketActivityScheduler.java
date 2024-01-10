@@ -2,7 +2,7 @@ package digital.softwareshinobi.napkinexchange.market.scheduled;
 
 import lombok.AllArgsConstructor;
 import digital.softwareshinobi.napkinexchange.market.constants.MarketIntervals;
-import digital.softwareshinobi.napkinexchange.ticker.service.SecurityPricingQuoteHistoryService;
+import digital.softwareshinobi.napkinexchange.security.service.SecurityPricingQuoteHistoryService;
 import digital.softwareshinobi.napkinexchange.trader.service.AccountHistoryService;
 import digital.softwareshinobi.napkinexchange.portfolio.controller.LimitOrderService;
 import org.slf4j.Logger;

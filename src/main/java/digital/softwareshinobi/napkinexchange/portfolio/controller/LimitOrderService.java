@@ -1,16 +1,16 @@
 package digital.softwareshinobi.napkinexchange.portfolio.controller;
 
-import lombok.AllArgsConstructor;
+import digital.softwareshinobi.napkinexchange.portfolio.order.BuyStockRequest;
+import digital.softwareshinobi.napkinexchange.portfolio.order.SellStockRequest;
 import digital.softwareshinobi.napkinexchange.trader.exception.AccountNotFoundException;
-import digital.softwareshinobi.napkinexchange.trader.model.entity.Account;
-import digital.softwareshinobi.napkinexchange.trader.model.entity.LimitOrder;
-import digital.softwareshinobi.napkinexchange.trader.model.payload.BuyStockRequest;
-import digital.softwareshinobi.napkinexchange.trader.model.payload.SellStockRequest;
+import digital.softwareshinobi.napkinexchange.trader.model.Account;
+import digital.softwareshinobi.napkinexchange.trader.model.LimitOrder;
 import digital.softwareshinobi.napkinexchange.trader.repository.LimitOrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
@@ -102,9 +102,9 @@ public class LimitOrderService {
 
         System.out.println("order.getLimitPrice() /" + limitOrder.getLimitPrice());
 
-        System.out.println("order.getStock().getPrice() /" + limitOrder.getStock().getPrice());
+        System.out.println("order.getSecurity().getPrice() /" + limitOrder.getSecurity().getPrice());
 
-        if (limitOrder.getLimitPrice() < limitOrder.getStock().getPrice()) {
+        if (limitOrder.getLimitPrice() < limitOrder.getSecurity().getPrice()) {
 
             System.out.println("IT'S TIME TO OPEN THIS TRADE");
 
@@ -113,11 +113,10 @@ public class LimitOrderService {
                 stockOwnedService.fillBuyStockRequest(
                         new BuyStockRequest(
                                 limitOrder.getAccount().getUsername(),
-                                limitOrder.getStock().getTicker(),
+                                limitOrder.getSecurity().getSymbol(),
                                 limitOrder.getSharesToBuy()));
 
-                clearAndDeleteLimitOrder(limitOrder);
-
+                //   clearAndDeleteLimitOrder(limitOrder);
             } catch (AccountNotFoundException e) {
 
                 e.printStackTrace();
@@ -139,10 +138,10 @@ public class LimitOrderService {
 
         System.out.println("order.getLimitPrice() /" + limitOrder.getLimitPrice());
 
-        System.out.println("order.getStock().getPrice() /" + limitOrder.getStock().getPrice());
+        System.out.println("order.getSecurity().getPrice() /" + limitOrder.getSecurity().getPrice());
 
         //todo, we shouldn't be compariing doubles like this
-        if (limitOrder.getStock().getPrice() < limitOrder.getLimitPrice()) {
+        if (limitOrder.getSecurity().getPrice() < limitOrder.getLimitPrice()) {
 
             System.out.println("IT'S TIME TO TRIGGER THIS STOP LOSS");
 
@@ -151,11 +150,10 @@ public class LimitOrderService {
                 stockOwnedService.sellStockMarketPrice(
                         new SellStockRequest(
                                 limitOrder.getAccount().getUsername(),
-                                limitOrder.getStock().getTicker(),
+                                limitOrder.getSecurity().getSymbol(),
                                 limitOrder.getSharesToBuy()));
 
-                clearAndDeleteLimitOrder(limitOrder);
-
+//                clearAndDeleteLimitOrder(limitOrder);
             } catch (AccountNotFoundException e) {
 
                 e.printStackTrace();
@@ -178,10 +176,10 @@ public class LimitOrderService {
 
         System.out.println("order.getLimitPrice() /" + limitOrder.getLimitPrice());
 
-        System.out.println("order.getStock().getPrice() /" + limitOrder.getStock().getPrice());
+        System.out.println("order.getSecurity().getPrice() /" + limitOrder.getSecurity().getPrice());
 
         //todo, we shouldn't be compariing doubles like this
-        if (limitOrder.getStock().getPrice() > limitOrder.getLimitPrice()) {
+        if (limitOrder.getSecurity().getPrice() > limitOrder.getLimitPrice()) {
 
             System.out.println("IT'S TIME TO TRIGGER THIS STOP LOSS");
 
@@ -190,11 +188,10 @@ public class LimitOrderService {
                 stockOwnedService.sellStockMarketPrice(
                         new SellStockRequest(
                                 limitOrder.getAccount().getUsername(),
-                                limitOrder.getStock().getTicker(),
+                                limitOrder.getSecurity().getSymbol(),
                                 limitOrder.getSharesToBuy()));
 
-                clearAndDeleteLimitOrder(limitOrder);
-
+//                clearAndDeleteLimitOrder(limitOrder);
             } catch (AccountNotFoundException e) {
 
                 e.printStackTrace();
@@ -213,11 +210,11 @@ public class LimitOrderService {
 //        limitOrderRepository.truncateTable();
 //    }
 
-    private void clearAndDeleteLimitOrder(LimitOrder limitOrder) {
-        limitOrder.setAccount(null);
-        limitOrder.setStock(null);
-
-        saveLimitOrder(limitOrder);
-        deleteLimitOrder(limitOrder);
-    }
+//    private void clearAndDeleteLimitOrder(LimitOrder limitOrder) {
+//        limitOrder.setAccount(null);
+//        limitOrder.getSecurity(null);
+//
+//        saveLimitOrder(limitOrder);
+//        deleteLimitOrder(limitOrder);
+//    }
 }

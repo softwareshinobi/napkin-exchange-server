@@ -1,10 +1,10 @@
 package digital.softwareshinobi.napkinexchange.market.scheduled;
 
-import digital.softwareshinobi.napkinexchange.market.entity.Market;
+import digital.softwareshinobi.napkinexchange.market.Market;
 import digital.softwareshinobi.napkinexchange.market.service.MarketService;
 import digital.softwareshinobi.napkinexchange.security.model.Security;
-import digital.softwareshinobi.napkinexchange.ticker.service.SecurityPricingQuoteHistoryService;
-import digital.softwareshinobi.napkinexchange.ticker.service.StockService;
+import digital.softwareshinobi.napkinexchange.security.service.SecurityPricingQuoteHistoryService;
+import digital.softwareshinobi.napkinexchange.security.service.StockService;
 import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -49,10 +49,6 @@ public class HandleMarketActivity {
 
             stock.updatePriceWithFormula();
 
-            stock.updateMomentumStreak();
-
-            stock.updateMomentum();
-
             System.out.println("security / after / " + stock);
 
         });
@@ -80,6 +76,7 @@ public class HandleMarketActivity {
         return market.getDate();
 
     }
+
 }
 
 //    public void updateMarketMonthlyValues(

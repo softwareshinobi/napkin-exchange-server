@@ -39,7 +39,8 @@ function displayPricingTickData() {
 
                 trHTML += '<td class="">' + responseData.pricingHistory[i].ask + '</td>';
 
-                trHTML += '<td class="">' + responseData.pricingHistory[i].priceChangeAmount + '</td>';
+                trHTML += '<td class="">' + responseData.pricingHistory[i].priceChangeDifferential + '</td>';
+
       trHTML += '<td class="">' + responseData.pricingHistory[i].priceChangePercentage + '</td>';
 
             }

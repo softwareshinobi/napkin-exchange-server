@@ -1,12 +1,12 @@
 package digital.softwareshinobi.napkinexchange.portfolio.controller;
 
 import digital.softwareshinobi.napkinexchange.security.model.Security;
-import digital.softwareshinobi.napkinexchange.ticker.service.StockService;
+import digital.softwareshinobi.napkinexchange.security.service.StockService;
 import digital.softwareshinobi.napkinexchange.trader.exception.AccountBalanceException;
-import digital.softwareshinobi.napkinexchange.trader.model.entity.Account;
-import digital.softwareshinobi.napkinexchange.trader.model.entity.StockOwned;
-import digital.softwareshinobi.napkinexchange.trader.model.payload.BuyStockRequest;
-import digital.softwareshinobi.napkinexchange.trader.model.payload.SellStockRequest;
+import digital.softwareshinobi.napkinexchange.trader.model.Account;
+import digital.softwareshinobi.napkinexchange.trader.model.StockOwned;
+import digital.softwareshinobi.napkinexchange.portfolio.order.BuyStockRequest;
+import digital.softwareshinobi.napkinexchange.portfolio.order.SellStockRequest;
 import digital.softwareshinobi.napkinexchange.trader.repository.StockOwnedRepository;
 import digital.softwareshinobi.napkinexchange.trader.service.AccountService;
 import digital.softwareshinobi.napkinexchange.trader.utils.ValidateStockTransaction;
@@ -35,7 +35,7 @@ public class StockOwnedService {
 
         Account account = accountService.getAccountByName(buyStockRequest.getUsername());
 
-        Security stock = stockService.getStockByTickerSymbol(buyStockRequest.getTicker());
+        Security stock = stockService.getStockByTickerSymbol(buyStockRequest.getSymbol());
 
         StockOwned stockOwned = findStockOwned(account, stock);
 
@@ -68,7 +68,7 @@ public class StockOwnedService {
 
         stockOwnedRepository.save(new StockOwned(
                 account,
-                buyStock.getTicker(),
+                buyStock.getSymbol(),
                 buyStock.getSharesToBuy(),
                 stockPrice
         ));
@@ -91,7 +91,7 @@ public class StockOwnedService {
 
         System.out.println("2.0");
 
-        Security stock = stockService.getStockByTickerSymbol(sellStock.getTicker());
+        Security stock = stockService.getStockByTickerSymbol(sellStock.getSymbol());
 
         System.out.println("2");
 
@@ -131,7 +131,7 @@ public class StockOwnedService {
     public StockOwned findStockOwned(Account account, Security stock) {
 
         return stockOwnedRepository.findAll().stream()
-                .filter(stockOwned -> stockOwned.getTicker().equalsIgnoreCase(stock.getTicker()))
+                .filter(stockOwned -> stockOwned.getSymbol().equalsIgnoreCase(stock.getSymbol()))
                 .filter(stockOwned -> stockOwned.getAccount().getUsername().equals(account.getUsername()))
                 .findFirst()
                 .orElse(null);

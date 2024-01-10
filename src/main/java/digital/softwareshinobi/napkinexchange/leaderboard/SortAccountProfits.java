@@ -1,6 +1,6 @@
 package digital.softwareshinobi.napkinexchange.leaderboard;
 
-import digital.softwareshinobi.napkinexchange.trader.model.entity.Account;
+import digital.softwareshinobi.napkinexchange.trader.model.Account;
 import java.util.Comparator;
 import java.util.List;
 

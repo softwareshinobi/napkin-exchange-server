@@ -1,12 +1,12 @@
 package digital.softwareshinobi.napkinexchange.trader.utils;
 
 import digital.softwareshinobi.napkinexchange.security.model.Security;
-import digital.softwareshinobi.napkinexchange.ticker.exception.StockNotFoundException;
-import digital.softwareshinobi.napkinexchange.ticker.service.StockService;
-import digital.softwareshinobi.napkinexchange.trader.model.entity.Account;
-import digital.softwareshinobi.napkinexchange.trader.model.entity.StockOwned;
-import digital.softwareshinobi.napkinexchange.trader.model.payload.BuyStockRequest;
-import digital.softwareshinobi.napkinexchange.trader.model.payload.SellStockRequest;
+import digital.softwareshinobi.napkinexchange.security.exception.StockNotFoundException;
+import digital.softwareshinobi.napkinexchange.security.service.StockService;
+import digital.softwareshinobi.napkinexchange.trader.model.Account;
+import digital.softwareshinobi.napkinexchange.trader.model.StockOwned;
+import digital.softwareshinobi.napkinexchange.portfolio.order.BuyStockRequest;
+import digital.softwareshinobi.napkinexchange.portfolio.order.SellStockRequest;
 
 public class ValidateStockTransaction {
 
@@ -21,7 +21,7 @@ public class ValidateStockTransaction {
 
         try {
 
-            stock = stockService.getStockByTickerSymbol(buyStockRequest.getTicker());
+            stock = stockService.getStockByTickerSymbol(buyStockRequest.getSymbol());
 
         } catch (StockNotFoundException ex) {
 
@@ -39,7 +39,7 @@ public class ValidateStockTransaction {
 
         StockOwned stock = FindStockOwned.findOwnedStockByTicker(
                 account.getStocksOwned(),
-                sellStock.getTicker());
+                sellStock.getSymbol());
 
         if (stock == null) {
 

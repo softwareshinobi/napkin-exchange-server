@@ -1,13 +1,13 @@
 package digital.softwareshinobi.napkinexchange.portfolio.controller;
 
 import digital.softwareshinobi.napkinexchange.security.model.Security;
-import digital.softwareshinobi.napkinexchange.ticker.service.StockService;
+import digital.softwareshinobi.napkinexchange.security.service.StockService;
 import digital.softwareshinobi.napkinexchange.trader.exception.AccountBalanceException;
 import digital.softwareshinobi.napkinexchange.trader.exception.AccountNotFoundException;
-import digital.softwareshinobi.napkinexchange.trader.model.entity.LimitOrder;
-import digital.softwareshinobi.napkinexchange.trader.model.payload.BuyStockRequest;
-import digital.softwareshinobi.napkinexchange.trader.model.payload.LimitOrderRequest;
-import digital.softwareshinobi.napkinexchange.trader.model.payload.SellStockRequest;
+import digital.softwareshinobi.napkinexchange.trader.model.LimitOrder;
+import digital.softwareshinobi.napkinexchange.portfolio.order.BuyStockRequest;
+import digital.softwareshinobi.napkinexchange.portfolio.order.LimitOrderRequest;
+import digital.softwareshinobi.napkinexchange.portfolio.order.SellStockRequest;
 import digital.softwareshinobi.napkinexchange.trader.service.AccountService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +92,7 @@ public class AccountInventoryController {
 
         System.out.println("buyStockRequest / fulfilled");
 
-        Security stock = stockService.getStockByTickerSymbol(buyStockRequest.getTicker());
+        Security stock = stockService.getStockByTickerSymbol(buyStockRequest.getSymbol());
 
         System.out.println("stock: " + stock);
 
@@ -100,7 +100,7 @@ public class AccountInventoryController {
                 new LimitOrder(
                         LimitOrderTypes.SELL_STOP_LOSS,
                         accountService.getAccountByName(buyStockRequest.getUsername()),
-                        stockService.getStockByTickerSymbol(buyStockRequest.getTicker()),
+                        stockService.getStockByTickerSymbol(buyStockRequest.getSymbol()),
                         buyStockRequest.getSharesToBuy(),
                         (stock.getPrice() * 0.99)
                 )
@@ -110,7 +110,7 @@ public class AccountInventoryController {
                 new LimitOrder(
                         LimitOrderTypes.SELL_TAKE_PROFIT,
                         accountService.getAccountByName(buyStockRequest.getUsername()),
-                        stockService.getStockByTickerSymbol(buyStockRequest.getTicker()),
+                        stockService.getStockByTickerSymbol(buyStockRequest.getSymbol()),
                         buyStockRequest.getSharesToBuy(),
                         (stock.getPrice() * 1.03)
                 )
@@ -129,7 +129,7 @@ public class AccountInventoryController {
                 new LimitOrder(
                         LimitOrderTypes.BUY_STOP,
                         accountService.getAccountByName(limitOrderRequest.getUsername()),
-                        stockService.getStockByTickerSymbol(limitOrderRequest.getTicker()),
+                        stockService.getStockByTickerSymbol(limitOrderRequest.getSymbol()),
                         limitOrderRequest.getSharesToBuy(),
                         limitOrderRequest.getLimitPrice()
                 )
@@ -156,7 +156,7 @@ public class AccountInventoryController {
                 new LimitOrder(
                         LimitOrderTypes.BUY_STOP,
                         accountService.getAccountByName(limitOrderRequest.getUsername()),
-                        stockService.getStockByTickerSymbol(limitOrderRequest.getTicker()),
+                        stockService.getStockByTickerSymbol(limitOrderRequest.getSymbol()),
                         limitOrderRequest.getSharesToBuy(),
                         limitOrderRequest.getLimitPrice()
                 )
@@ -166,7 +166,7 @@ public class AccountInventoryController {
                 new LimitOrder(
                         LimitOrderTypes.SELL_STOP_LOSS,
                         accountService.getAccountByName(limitOrderRequest.getUsername()),
-                        stockService.getStockByTickerSymbol(limitOrderRequest.getTicker()),
+                        stockService.getStockByTickerSymbol(limitOrderRequest.getSymbol()),
                         limitOrderRequest.getSharesToBuy(),
                         (limitOrderRequest.getLimitPrice() * 0.99)
                 )
@@ -176,7 +176,7 @@ public class AccountInventoryController {
                 new LimitOrder(
                         LimitOrderTypes.SELL_TAKE_PROFIT,
                         accountService.getAccountByName(limitOrderRequest.getUsername()),
-                        stockService.getStockByTickerSymbol(limitOrderRequest.getTicker()),
+                        stockService.getStockByTickerSymbol(limitOrderRequest.getSymbol()),
                         limitOrderRequest.getSharesToBuy(),
                         (limitOrderRequest.getLimitPrice() * 1.03)
                 )
@@ -216,7 +216,7 @@ public class AccountInventoryController {
                 new LimitOrder(
                         LimitOrderTypes.SELL_STOP_LOSS,
                         accountService.getAccountByName(limitOrderRequest.getUsername()),
-                        stockService.getStockByTickerSymbol(limitOrderRequest.getTicker()),
+                        stockService.getStockByTickerSymbol(limitOrderRequest.getSymbol()),
                         limitOrderRequest.getSharesToBuy(),
                         limitOrderRequest.getLimitPrice())
         );
@@ -242,7 +242,7 @@ public class AccountInventoryController {
                 new LimitOrder(
                         LimitOrderTypes.SELL_TAKE_PROFIT,
                         accountService.getAccountByName(limitOrderRequest.getUsername()),
-                        stockService.getStockByTickerSymbol(limitOrderRequest.getTicker()),
+                        stockService.getStockByTickerSymbol(limitOrderRequest.getSymbol()),
                         limitOrderRequest.getSharesToBuy(),
                         limitOrderRequest.getLimitPrice()
                 )

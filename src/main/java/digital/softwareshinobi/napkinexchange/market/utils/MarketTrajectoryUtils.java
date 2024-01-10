@@ -1,6 +1,6 @@
 package digital.softwareshinobi.napkinexchange.market.utils;
 
-import digital.softwareshinobi.napkinexchange.market.entity.Market;
+import digital.softwareshinobi.napkinexchange.market.Market;
 import digital.softwareshinobi.napkinexchange.market.enums.MarketTrajectory;
 import digital.softwareshinobi.napkinexchange.security.model.Security;
 import java.util.List;

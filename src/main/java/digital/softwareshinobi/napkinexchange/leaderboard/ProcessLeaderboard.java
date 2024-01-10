@@ -1,7 +1,7 @@
 package digital.softwareshinobi.napkinexchange.leaderboard;
 
 import lombok.AllArgsConstructor;
-import digital.softwareshinobi.napkinexchange.trader.model.entity.Account;
+import digital.softwareshinobi.napkinexchange.trader.model.Account;
 import digital.softwareshinobi.napkinexchange.trader.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
