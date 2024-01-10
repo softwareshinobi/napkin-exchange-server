@@ -2,9 +2,9 @@ package digital.softwareshinobi.napkinexchange.ticker.dto;
 
 import digital.softwareshinobi.napkinexchange.security.model.Security;
 import digital.softwareshinobi.napkinexchange.security.quote.SecurityPricingQuoteWrapper;
+import digital.softwareshinobi.napkinexchange.trader.utils.CalculateCostBasisAndProfits;
 import java.util.List;
 import java.util.stream.Collectors;
-import digital.softwareshinobi.napkinexchange.trader.utils.CalculateCostBasisAndProfits;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,33 +15,33 @@ import lombok.Setter;
 public class StockDTO {
 
     private String ticker;
-    
+
     private String companyName;
-    
+
     private String sector;
-    
+
     private String marketCap;
-    
+
     private double price;
-    
+
     private double lastDayPrice;
-    
+
     private int momentum;
-    
+
     private int momentumStreakInDays;
-    
+
     private String volatileStock;
-    
+
     private String investorRating;
 
     private List<SecurityPricingQuoteWrapper> pricingHistory;
 
     private double priceChangePercentage;
-    
+
     private double priceChangeDifferential;
 
     public StockDTO(Security stock) {
-        
+
         this.ticker = stock.getTicker();
         this.companyName = stock.getCompanyName();
         this.sector = stock.getSector();
@@ -52,13 +52,13 @@ public class StockDTO {
         this.momentumStreakInDays = stock.getMomentumStreakInDays();
         this.volatileStock = String.valueOf(stock.getVolatileStock());
         this.investorRating = String.valueOf(stock.getInvestorRating());
-        
-        this.pricingHistory = stock.getPriceHistory().stream()
+
+        this.pricingHistory = stock.getPricingHistory().stream()
                 .map(SecurityPricingQuoteWrapper::new)
                 .collect(Collectors.toList());
 
         this.priceChangePercentage = getPercentChange(this.getPrice(), this.getLastDayPrice());
-      
+
         this.priceChangeDifferential = (this.getLastDayPrice() - this.getPrice());
 
     }

@@ -1,9 +1,6 @@
 package digital.softwareshinobi.napkinexchange.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import digital.softwareshinobi.napkinexchange.market.utils.GetRandomNumber;
 import digital.softwareshinobi.napkinexchange.security.quote.SecurityPricingQuote;
 import digital.softwareshinobi.napkinexchange.ticker.defaults.DefaultStockPrices;
@@ -11,9 +8,10 @@ import digital.softwareshinobi.napkinexchange.ticker.enums.InvestorRating;
 import digital.softwareshinobi.napkinexchange.ticker.enums.MarketCap;
 import digital.softwareshinobi.napkinexchange.ticker.enums.Volatility;
 import jakarta.persistence.*;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity(name = "stock")
 @Table(name = "stock")
@@ -42,12 +40,6 @@ public class Security {
     @Column(name = "last_quote")
     private Double lastQuote;
 
-    @Column(name = "priceChangeAmount")
-    private long priceChangeAmount = 0l;
-
-    @Column(name = "priceChangePercentage")
-    private Double priceChangePercentage = 0d;
-
     @Column(name = "momentum")
     private Integer momentum;
 
@@ -64,7 +56,7 @@ public class Security {
 
     @OneToMany(mappedBy = "stock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<SecurityPricingQuote> priceHistory;
+    private List<SecurityPricingQuote> pricingHistory;
 
     public Security(String ticker,
             String companyName,
@@ -93,10 +85,6 @@ public class Security {
 
         this.momentumStreakInDays = 0;
 
-        this.priceChangeAmount = 0l;
-
-        this.priceChangePercentage = 0d;
-
     }
 
 //    public void updatePriceWithFormulaHack() {
@@ -118,6 +106,7 @@ public class Security {
 //
 //    }
     String uuid;
+
     public void updatePriceWithFormula() {
 
         //Volatile stocks change twice to increase market movements
@@ -133,9 +122,7 @@ public class Security {
                 + (this.getInvestorRating().investorRatingMultiplier() * randomPositiveNumber)
                 + (this.getMomentum() * randomPositiveNumber)) * 100.00) / 100.00;
 
-        this.priceChangeAmount = new Date().getTime();
-        this.uuid = UUID.randomUUID().toString();
-        setPrice(newPrice);
+        this.setPrice(newPrice);
 
     }
 
@@ -249,8 +236,6 @@ public class Security {
         sb.append(", marketCap=").append(marketCap);
         sb.append(", price=").append(price);
         sb.append(", lastQuote=").append(lastQuote);
-        sb.append(", priceChangeAmount=").append(priceChangeAmount);
-        sb.append(", priceChangePercentage=").append(priceChangePercentage);
         sb.append(", momentum=").append(momentum);
         sb.append(", momentumStreakInDays=").append(momentumStreakInDays);
         sb.append(", volatileStock=").append(volatileStock);

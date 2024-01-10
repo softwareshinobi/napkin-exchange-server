@@ -5,7 +5,7 @@ import digital.softwareshinobi.napkinexchange.ticker.dto.StockSummaryDTO;
 import digital.softwareshinobi.napkinexchange.ticker.exception.StockNotFoundException;
 import digital.softwareshinobi.napkinexchange.ticker.dto.StockDTO;
 import digital.softwareshinobi.napkinexchange.security.quote.SecurityPricingQuoteWrapper;
-import digital.softwareshinobi.napkinexchange.ticker.service.StockPriceHistoryService;
+import digital.softwareshinobi.napkinexchange.ticker.service.SecurityPricingQuoteHistoryService;
 import digital.softwareshinobi.napkinexchange.ticker.service.StockService;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,7 @@ public class CandleStickAPI {
     private StockService stockService;
 
     @Autowired
-    private StockPriceHistoryService stockPriceHistoryService;
+    private SecurityPricingQuoteHistoryService stockPriceHistoryService;
 
     private static final int TARGET_OUTPUT_LIST_SIZE = 100;
 

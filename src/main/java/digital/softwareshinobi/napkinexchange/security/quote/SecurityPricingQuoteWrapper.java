@@ -18,9 +18,7 @@ public class SecurityPricingQuoteWrapper {
 
     private final String code = "with ♥";
 
-    private final double priceChangeAmount;
-
-    private final double priceChangePercentage;
+    private double asdf;
 
     public SecurityPricingQuoteWrapper(SecurityPricingQuote securityPricingQuote) {
 
@@ -32,10 +30,7 @@ public class SecurityPricingQuoteWrapper {
 
         this.ticker = securityPricingQuote.stock.getTicker();
 
-        this.priceChangeAmount = securityPricingQuote.stock.getPriceChangeAmount();
-
-        this.priceChangePercentage = securityPricingQuote.stock.getPriceChangePercentage();
-
+        asdf = securityPricingQuote.getLastPrice();
     }
 
 }

@@ -3,7 +3,7 @@ package digital.softwareshinobi.napkinexchange.market.scheduled;
 import digital.softwareshinobi.napkinexchange.market.entity.Market;
 import digital.softwareshinobi.napkinexchange.market.service.MarketService;
 import digital.softwareshinobi.napkinexchange.security.model.Security;
-import digital.softwareshinobi.napkinexchange.ticker.service.StockPriceHistoryService;
+import digital.softwareshinobi.napkinexchange.ticker.service.SecurityPricingQuoteHistoryService;
 import digital.softwareshinobi.napkinexchange.ticker.service.StockService;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -22,7 +22,7 @@ public class HandleMarketActivity {
     private final MarketService marketService;
 
     @Autowired
-    private final StockPriceHistoryService stockPriceHistoryService;
+    private final SecurityPricingQuoteHistoryService stockPriceHistoryService;
 
     public ZonedDateTime dailyMarketActivity() {
 
