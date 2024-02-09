@@ -26,9 +26,32 @@ public class CandleStickAPI {
 
     private static final int TARGET_OUTPUT_LIST_SIZE = 100;
 
+    public CandleStickAPI() {
+
+        System.out.println("CandleStickAPI / CandleStickAPICandleStickAPICandleStickAPICandleStickAPICandleStickAPICandleStickAPI");
+
+    }
+
+    @GetMapping(value = "/")
+    public String health() {
+
+        return "OK";
+
+    }
+
+    @GetMapping(value = "/health")
+    public String h22ealth() {
+
+        return "OK";
+
+    }
+
     @GetMapping(value = "/{ticker}")
     public Security getIndividualStockData(@PathVariable String ticker) {
 
+        System.out.println("getIndividualStockData getIndividualStockData ");
+        System.out.println("ticker / " + ticker);
+        System.out.println("tickers / " + stockService.getAllStocks());
         return stockService.getStockByTickerSymbol(ticker);
 
     }

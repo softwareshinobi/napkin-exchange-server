@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import digital.softwareshinobi.napkinexchange.security.defaults.DefaultStockPrices.CurrencySizing;
 import digital.softwareshinobi.napkinexchange.security.quote.BidAskQuote;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,8 @@ import lombok.Setter;
 @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
+@Transactional
+
 public class Security {
 
     @Id

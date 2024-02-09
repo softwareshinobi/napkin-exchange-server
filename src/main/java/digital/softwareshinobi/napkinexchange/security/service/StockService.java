@@ -58,14 +58,27 @@ public class StockService {
     }
 
     public void saveDefaultStockToDatabase(List<Security> defaultStocks) {
+
         List<Security> currentStocks = stockRepository.findAll();
+
+        System.out.println("currentStocks / " + currentStocks);
+
         List<Security> unsavedStocks = new ArrayList<>();
-        defaultStocks.forEach(stock -> {
-            if (!stockTickerExistsInList(currentStocks, stock.getSymbol())) {
-                unsavedStocks.add(stock);
+
+        defaultStocks.forEach(singleDefaultStock -> {
+
+            if (!stockTickerExistsInList(currentStocks, singleDefaultStock.getSymbol())) {
+
+                unsavedStocks.add(singleDefaultStock);
+
+                System.out.println("singleDefaultStock / " + singleDefaultStock);
+
             }
+
         });
+
         stockRepository.saveAll(unsavedStocks);
+
     }
 
     //Used for searching which default stocks do not exist and should be saved on startup
